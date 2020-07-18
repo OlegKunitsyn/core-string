@@ -149,7 +149,7 @@ end function hex-to-byte.
 *> 
 *> @param l-haystack String to search in
 *> @param l-needle String to search for
-*> @return
+*> @return Number of occurrences
 *>*
 identification division.
 function-id. substr-count.
