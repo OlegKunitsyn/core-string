@@ -13,6 +13,7 @@
     "licenses": [
         "LGPL-3.0"
     ],
+    "dependencies": {},
     "dependencies-debug": {
         "gcblunit": "*"
     }

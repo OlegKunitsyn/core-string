@@ -328,3 +328,62 @@ procedure division using l-byte returning l-urlencoded.
     move "%" to l-urlencoded(1:1).
     move byte-to-hex(l-byte) to l-urlencoded(2:2).
 end function byte-to-urlencoded.
+
+*>*
+*> Convert ECB exchange rates in CSV format to the list of currency-rate pairs.
+*> https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html
+*> 
+*> @param l-byte CSV string
+*> @return Urlencoded symbol Pointer to the list of 64 [pic x(3), pic 9(7)V9(8)] elements
+*>*
+identification division.
+function-id. csv-ecb-rates.
+environment division.
+configuration section.
+repository. function all intrinsic.
+data division.
+working-storage section.
+    01 ws-header usage binary-char unsigned.
+    01 ws-header-idx usage index.
+    01 ws-field pic x(32).
+    01 ws-csv-pointer usage binary-long unsigned.
+    01 ws-field-pointer usage binary-long unsigned.
+    01 ws-list.
+        05 ws-rates occurs 64 times indexed by ws-rates-idx.
+            10 ws-currency pic x(3).
+            10 ws-rate pic 9(7)V9(8).
+linkage section.
+    01 l-csv pic x any length.
+    01 l-list.
+        05 l-rates usage pointer.
+procedure division using l-csv returning l-list.
+    set l-rates to address of ws-list.
+    move 1 to ws-csv-pointer, ws-field-pointer.
+    set ws-rates-idx to 1.
+    set ws-header-idx to 0.
+    move SPACES to ws-field.
+    move 1 to ws-header.
+    perform until ws-csv-pointer > byte-length(l-csv)
+        evaluate TRUE
+        when l-csv(ws-csv-pointer:2) = ", "
+            if ws-rates-idx > 1
+                if ws-header = 1
+                    move ws-field to ws-currency(ws-rates-idx - 1)  
+                else
+                    move ws-field to ws-rate(ws-rates-idx - 1) 
+                end-if
+            end-if
+            set ws-rates-idx up by 1
+            move SPACES to ws-field
+            move 1 to ws-field-pointer
+            add 2 to ws-csv-pointer
+        when l-csv(ws-csv-pointer:1) = x"0a"
+            move 0 to ws-header
+            set ws-rates-idx to 1
+            add 1 to ws-csv-pointer
+        when other
+           move l-csv(ws-csv-pointer:1) to ws-field(ws-field-pointer:1)
+           add 1 to ws-csv-pointer, ws-field-pointer
+        end-evaluate
+    end-perform.
+end function csv-ecb-rates.

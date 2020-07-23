@@ -65,3 +65,10 @@ Convert one byte into urlencoded symbol.
  
 - @param l-byte Byte
 - @return Urlencoded symbol (3 bytes)
+
+### csv-ecb-rates
+Convert ECB exchange rates in CSV format to the list of currency-rate pairs.   
+https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html
+
+- @param l-byte CSV string
+- @return Urlencoded symbol Pointer to the list of 64 [pic x(3), pic 9(7)V9(8)] elements

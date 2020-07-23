@@ -7,6 +7,7 @@ program-id. string-test.
 environment division.
 configuration section.
 repository.
+    function csv-ecb-rates
     function urlencoded-to-byte
     function byte-to-urlencoded
     function sha3-256
@@ -16,10 +17,20 @@ repository.
     function byte-to-hex
     function hex-to-byte
     function substr-count
-    function substr-count-case.
+    function substr-count-case
+    function concatenate intrinsic.
 data division.
 working-storage section.
+    01 test-rate pic 9(7)V9(8).
+    01 l-list.
+        05 l-rates usage pointer.
+linkage section.
+    01 ws-list.
+        05 ws-rates occurs 64 times indexed by ws-rates-idx.
+            10 ws-currency pic x(3).
+            10 ws-rate pic 9(7)V9(8).
 procedure division.
+    perform csv-ecb-rates-test.
     perform byte-to-urlencoded-test.
     perform urlencoded-to-byte-test.
     perform sha3-256-test.
@@ -30,6 +41,23 @@ procedure division.
     perform byte-to-hex-test.
     perform hex-to-byte-test.
     goback.
+
+csv-ecb-rates-test section.
+    move csv-ecb-rates(
+        concatenate(
+            "Date, USD, JPY, ", x"0a",
+            "17 July 2020, 1.1428, 122.53, "
+        )
+    ) to l-list.
+    set address of ws-list to l-rates.
+    
+    call "assert-equals" using "USD", ws-currency(1).
+    move 1.1428 to test-rate.
+    call "assert-equals" using test-rate, ws-rate(1).
+    
+    call "assert-equals" using "JPY", ws-currency(2).
+    move 122.53 to test-rate.
+    call "assert-equals" using test-rate, ws-rate(2).
 
 urlencoded-to-byte-test section.
     call "assert-equals" using x"20", urlencoded-to-byte("%20").
