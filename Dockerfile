@@ -1,4 +1,4 @@
-FROM olegkunitsyn/gnucobol:3.1-dev
+FROM olegkunitsyn/gnucobol:2.2
 RUN mkdir /var/test
 WORKDIR /var/test
 COPY . .
