@@ -2,5 +2,6 @@ FROM olegkunitsyn/gnucobol:2.2
 RUN mkdir /var/test
 WORKDIR /var/test
 COPY . .
-RUN wget https://raw.githubusercontent.com/OlegKunitsyn/gcblunit/master/gcblunit.cbl
-RUN cobc -x -debug gcblunit.cbl tests/* --job='string-test'
+RUN cobolget update
+RUN cobolget install
+RUN cobc -x -debug modules/gcblunit/gcblunit.cbl tests/* --job='string-test'
