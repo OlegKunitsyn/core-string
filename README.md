@@ -5,5 +5,25 @@ GnuCOBOL core library with string functions
   <img src="https://github.com/OlegKunitsyn/core-string/workflows/Docker%20Image%20CI/badge.svg" />
 </p>
 
+# Usage
+Install and initialize [COBOL Package Manager](https://cobolget.com):
+```
+$ npm install -g cobolget
+$ cobolget init
+```
+Add the package to the `Manifest`:
+```
+$ cobolget add core-string
+$ cobolget update
+```
+Install the package and its dependencies:
+```
+$ cobolget install
+....
+Copybook modules.cpy updated.
+```
+Directory `modules` contains complete COBOL source-code and `modules.cpy` Copybook ready for inclusion into your project.
+
+
 # Documentation
 See coboldoc [documentation](https://github.com/OlegKunitsyn/core-string/tree/master/coboldoc).
