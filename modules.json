@@ -16,5 +16,8 @@
     "dependencies": {},
     "dependencies-debug": {
         "gcblunit": "*"
-    }
+    },
+    "scripts": {
+        "test": "docker build -t docker-ci ."
+      }
 }
