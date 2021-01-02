@@ -20,7 +20,7 @@ Install the package and its dependencies:
 ```
 $ cobolget install
 ....
-Copybook modules.cpy updated.
+Modules modules.cpy and modules.cbl updated.
 ```
 Directory `modules` contains complete COBOL source-code and `modules.cpy` Copybook ready for inclusion into your project.
 
