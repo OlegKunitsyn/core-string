@@ -37,18 +37,23 @@ data division.
 working-storage section.
     01 haystack-idx usage index value 1.
     01 needle-idx usage index value 1.
+    01 haystack-len usage binary-double unsigned.
+    01 needle-len usage binary-double unsigned.
 linkage section.
     01 l-haystack pic x any length.
     01 l-needle pic x any length.
     01 l-result usage binary-long unsigned value 0.
 procedure division using l-haystack, l-needle returning l-result.
     initialize haystack-idx, needle-idx, l-result all to value.
-    if length(l-haystack) < length(l-needle)
+    move length(l-haystack) to haystack-len.
+    move length(l-needle) to needle-len.
+
+    if haystack-len < needle-len
         goback
     end-if.
-    perform until haystack-idx > length(l-haystack)
+    perform until haystack-idx > haystack-len
         if l-haystack(haystack-idx:1) = l-needle(needle-idx:1)
-           if needle-idx = length(l-needle)
+           if needle-idx = needle-len
                compute l-result = haystack-idx - needle-idx + 1
                exit perform
            end-if
@@ -160,23 +165,32 @@ data division.
 working-storage section.
     01 haystack-idx usage index value 1.
     01 needle-idx usage index value 1.
+    01 haystack-len usage binary-double unsigned.
+    01 needle-len usage binary-double unsigned.
+    01 needle-char pic x.
+    01 haystack-char pic x.
 linkage section.
     01 l-haystack pic x any length.
     01 l-needle pic x any length.
     01 l-result usage binary-long unsigned value 0.
 procedure division using l-haystack, l-needle returning l-result.
     initialize haystack-idx, needle-idx, l-result all to value.
-    if length(l-haystack) < length(l-needle)
+    move length(l-haystack) to haystack-len.
+    move length(l-needle) to needle-len.
+
+    if haystack-len < needle-len
         goback
     end-if.
-    perform until haystack-idx > length(l-haystack)
-        if l-haystack(haystack-idx:1) = l-needle(needle-idx:1)
-           if needle-idx = length(l-needle)
+    perform until haystack-idx > haystack-len or needle-idx > needle-len
+        move l-haystack(haystack-idx:1) to haystack-char
+        move l-needle(needle-idx:1) to needle-char
+        if haystack-char = needle-char
+           if needle-idx = needle-len
                add 1 to l-result
+               initialize needle-idx all to value
+           else
+               set needle-idx up by 1
            end-if
-           set needle-idx up by 1
-        else
-           initialize needle-idx all to value
         end-if
         set haystack-idx up by 1
     end-perform.
@@ -193,17 +207,40 @@ identification division.
 function-id. substr-count-case.
 environment division.
 configuration section.
-repository. 
-    function lower-case intrinsic
-    function substr-count.
+repository. function length lower-case intrinsic.
 data division.
 working-storage section.
+    01 haystack-idx usage index value 1.
+    01 needle-idx usage index value 1.
+    01 haystack-len usage binary-double unsigned.
+    01 needle-len usage binary-double unsigned.
+    01 needle-char pic x.
+    01 haystack-char pic x.
 linkage section.
     01 l-haystack pic x any length.
     01 l-needle pic x any length.
     01 l-result usage binary-long unsigned value 0.
 procedure division using l-haystack, l-needle returning l-result.
-    move substr-count(lower-case(l-haystack), lower-case(l-needle)) to l-result.
+    initialize haystack-idx, needle-idx, l-result all to value.
+    move length(l-haystack) to haystack-len.
+    move length(l-needle) to needle-len.
+
+    if haystack-len < needle-len
+        goback
+    end-if.
+    perform until haystack-idx > haystack-len or needle-idx > needle-len
+        move lower-case(l-haystack(haystack-idx:1)) to haystack-char
+        move lower-case(l-needle(needle-idx:1)) to needle-char
+        if haystack-char = needle-char
+           if needle-idx = needle-len
+               add 1 to l-result
+               initialize needle-idx all to value
+           else
+               set needle-idx up by 1
+           end-if
+        end-if
+        set haystack-idx up by 1
+    end-perform.
 end function substr-count-case.
 
 *>*
@@ -224,6 +261,8 @@ working-storage section.
     78 RATE value 1088.
     78 CAPACITY value 512.
     78 SUFFIX value x"06".
+    01 LEN usage binary-double unsigned value 32.
+    01 buffer-len usage binary-double unsigned.
     01 ws-idx usage index.
     01 ws-hash pic x(32).
 linkage section.
@@ -231,15 +270,16 @@ linkage section.
     01 l-hex.
         05 hex pic x(2) occurs 32 times.
 procedure division using l-buffer returning l-hex.
+    move byte-length(l-buffer) to buffer-len.
     call "KECCAK" using 
         RATE
         CAPACITY
         l-buffer
-        byte-length(l-buffer)
+        buffer-len
         SUFFIX
-        ws-hash 
-        byte-length(ws-hash).
-    perform varying ws-idx from 1 by 1 until ws-idx > byte-length(ws-hash)
+        ws-hash
+        LEN.
+    perform varying ws-idx from 1 by 1 until ws-idx > LEN
         move byte-to-hex(ws-hash(ws-idx:1)) to hex(ws-idx)
     end-perform.
 end function sha3-256.
@@ -262,6 +302,8 @@ working-storage section.
     78 RATE value 576.
     78 CAPACITY value 1024.
     78 SUFFIX value x"06".
+    01 LEN usage binary-double unsigned value 64.
+    01 buffer-len usage binary-double unsigned.
     01 ws-idx usage index.
     01 ws-hash pic x(64).
 linkage section.
@@ -269,15 +311,16 @@ linkage section.
     01 l-hex.
         05 hex pic x(2) occurs 64 times.
 procedure division using l-buffer returning l-hex.
+    move byte-length(l-buffer) to buffer-len.
     call "KECCAK" using 
         RATE
         CAPACITY
         l-buffer
-        byte-length(l-buffer)
+        buffer-len
         SUFFIX
         ws-hash 
-        byte-length(ws-hash).
-    perform varying ws-idx from 1 by 1 until ws-idx > byte-length(ws-hash)
+        LEN.
+    perform varying ws-idx from 1 by 1 until ws-idx > LEN
         move byte-to-hex(ws-hash(ws-idx:1)) to hex(ws-idx)
     end-perform.
 end function sha3-512.
@@ -352,20 +395,22 @@ working-storage section.
         05 ws-rates occurs 64 times indexed by ws-rates-idx.
             10 ws-currency pic x(3).
             10 ws-rate pic 9(7)V9(8).
+    01 csv-len usage binary-double unsigned.
 linkage section.
     01 l-csv pic x any length.
     01 l-list.
         05 l-rates usage pointer.
 procedure division using l-csv returning l-list.
+    move byte-length(l-csv) to csv-len.
     set l-rates to address of ws-list.
     move 1 to ws-csv-pointer, ws-field-pointer.
     set ws-rates-idx to 1.
     set ws-header-idx to 0.
     move SPACES to ws-field.
     move 1 to ws-header.
-    perform until ws-csv-pointer > byte-length(l-csv)
+    perform until ws-csv-pointer > byte-length(l-csv) - 1
         evaluate TRUE
-        when l-csv(ws-csv-pointer:2) = ", "
+        when l-csv(ws-csv-pointer:1) = "," and l-csv(1 + ws-csv-pointer:1) = " "
             if ws-rates-idx > 1
                 if ws-header = 1
                     move ws-field to ws-currency(ws-rates-idx - 1)  

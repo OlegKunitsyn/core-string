@@ -2,7 +2,7 @@
 GnuCOBOL core library with string functions
 
 <p align="center">
-  <img src="https://github.com/OlegKunitsyn/core-string/workflows/Docker%20Image%20CI/badge.svg" />
+  <img src="https://github.com/OlegKunitsyn/core-string/workflows/Docker%20Image%20CI/badge.svg?branch=master" />
 </p>
 
 # Usage

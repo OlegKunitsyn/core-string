@@ -35,11 +35,12 @@ procedure division.
     perform urlencoded-to-byte-test.
     perform sha3-256-test.
     perform sha3-512-test.
-    perform substr-count-test.
     perform substr-pos-test.
     perform substr-pos-case-test.
     perform byte-to-hex-test.
     perform hex-to-byte-test.
+    perform substr-count-test.
+    perform substr-count-case-test.
     goback.
 
 csv-ecb-rates-test section.
