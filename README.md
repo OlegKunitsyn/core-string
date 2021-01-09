@@ -2,7 +2,7 @@
 GnuCOBOL 2.x core library with string functions
 
 <p align="center">
-  <img src="https://github.com/OlegKunitsyn/core-string/workflows/Docker%20Image%20CI/badge.svg" />
+  <img src="https://github.com/OlegKunitsyn/core-string/workflows/Docker%20Image%20CI/badge.svg?branch=2.x" />
 </p>
 
 # Usage
@@ -26,4 +26,4 @@ Directory `modules` contains complete COBOL source-code and `modules.cpy` Copybo
 
 
 # Documentation
-See coboldoc [documentation](https://github.com/OlegKunitsyn/core-string/tree/master/coboldoc).
+See coboldoc [documentation](https://github.com/OlegKunitsyn/core-string/tree/2.x/coboldoc).
