@@ -119,7 +119,7 @@ procedure division using l-byte returning l-hex.
 end function byte-to-hex.
 
 *>*
-*> Convert one byte into hexadecimal representation.
+*> Convert hexadecimal to binary.
 *> 
 *> @param l-hex 2 hexadecimal chars
 *> @return Byte

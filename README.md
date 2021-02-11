@@ -12,7 +12,7 @@ GnuCOBOL 3.x core library with string functions
 | [substr-pos](#substr-pos) | Find the position of the first occurrence of a substring in a string. Case-sensitive. | 
 | [substr-pos-case](#substr-pos-case) | Find the position of the first occurrence of a substring in a string. Case-insensitive. | 
 | [byte-to-hex](#byte-to-hex) | Convert one byte into hexadecimal representation. | 
-| [hex-to-byte](#hex-to-byte) | Convert one byte into hexadecimal representation. | 
+| [hex-to-byte](#hex-to-byte) | Convert hexadecimal to binary. | 
 | [substr-count](#substr-count) | Count the number of substring occurrences. Case-sensitive. | 
 | [substr-count-case](#substr-count-case) | Count the number of substring occurrences. Case-insensitive. | 
 | [sha3-256](#sha3-256) | Generate SHA3-256 message digest | 
